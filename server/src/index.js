@@ -1,11 +1,27 @@
 const express = require('express');
+const dotenv = require('dotenv');
+const morgan = require('morgan');
+const cors = require('cors')
+const mongoose = require('mongoose')
+PORT = 8000;
+
+const router = require('./router');
+
+dotenv.config();
+
 const app = express();
-const PORT = 8000;
 
-app.get('/todos', (req, res)=>{
+app.use(express.json())
+app.use(cors())
+app.use(morgan('tiny'));
 
-    res.send("You can do it.")
+app.use (router);
+
+app.get('/', (req, res)=>{
+    res.send("You can do it.");
 });
 
 
-app.listen(PORT, ()=>console.log(`Running on Port: ${PORT}`));
+
+mongoose.connect(process.env.MONGO_URI).then(()=>{
+app.listen(PORT, ()=> console.log(`Running on PORT: ${PORT}`))});
